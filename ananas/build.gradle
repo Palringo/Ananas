@@ -6,7 +6,7 @@ group='com.github.iamutkarshtiwari'
 
 android {
     namespace = 'iamutkarshtiwari.github.io.ananas'
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdk rootProject.ext.compileSdkVersion
 
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
