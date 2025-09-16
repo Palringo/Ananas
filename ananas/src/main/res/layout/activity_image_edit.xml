@@ -1,6 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="#333333"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -8,7 +10,8 @@
         android:layout_width="fill_parent"
         android:layout_height="55dp"
         android:layout_alignParentTop="true"
-        android:background="#333333">
+        android:background="#333333"
+        >
 
         <ImageView
             android:id="@+id/back_btn"
