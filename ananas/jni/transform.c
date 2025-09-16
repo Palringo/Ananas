@@ -263,6 +263,8 @@ int rotate90(Bitmap* bitmap, int doRed, int doGreen, int doBlue) {
 		(*bitmap).blueWidth = (*bitmap).blueHeight;
 		(*bitmap).blueHeight = temp;
 	}
+
+	return MEMORY_OK;
 }
 
 // Performs an in-memory 180 degrees rotation of an entire bitmap or just a colour component
@@ -388,4 +390,5 @@ int doTransforms(Bitmap* bitmap, int doRed, int doGreen, int doBlue) {
 			crop(bitmap, &left, &top, &right, &bottom, doRed, doGreen, doBlue);
 		}
 	}
+	return MEMORY_OK;
 }

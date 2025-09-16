@@ -102,6 +102,7 @@ int initBitmapMemory(Bitmap* bitmap, int width, int height) {
 	if (resultCode != MEMORY_OK) {
 		return resultCode;
 	}
+	return MEMORY_OK;
 }
 
 int decodeJpegData(char* jpegData, int jpegSize, int maxPixels, Bitmap* bitmap) {
@@ -110,8 +111,11 @@ int decodeJpegData(char* jpegData, int jpegSize, int maxPixels, Bitmap* bitmap) 
 	int maxWidth;
 	int maxHeight;
 
+	int redWidth, redHeight;
 	// Decode red channel
-	returnCode = decodeJpegChannel(jpegData, jpegSize, 0, &(*bitmap).red, &(*bitmap).redWidth, &(*bitmap).redHeight);
+	returnCode = decodeJpegChannel(jpegData, jpegSize, 0, &(*bitmap).red, &redWidth, &redHeight);
+	(*bitmap).redWidth = (unsigned int) redWidth;
+	(*bitmap).redHeight = (unsigned int) redHeight;
 	if (returnCode != MEMORY_OK) {
 		LOGE("Failed to decode red channel");
 		njDone();
@@ -134,8 +138,11 @@ int decodeJpegData(char* jpegData, int jpegSize, int maxPixels, Bitmap* bitmap) 
 		(*bitmap).redHeight = maxHeight;
 	}
 
+	int greenWidth, greenHeight;
 	// Decode green channel
-	returnCode = decodeJpegChannel(jpegData, jpegSize, 1, &(*bitmap).green, &(*bitmap).greenWidth, &(*bitmap).greenHeight);
+	returnCode = decodeJpegChannel(jpegData, jpegSize, 1, &(*bitmap).green, &greenWidth, &greenHeight);
+	(*bitmap).greenWidth = (unsigned int) greenWidth;
+	(*bitmap).greenHeight = (unsigned int) greenHeight;
 	if (returnCode != MEMORY_OK) {
 		LOGE("Failed to decode green channel");
 		njDone();
@@ -159,8 +166,11 @@ int decodeJpegData(char* jpegData, int jpegSize, int maxPixels, Bitmap* bitmap) 
 		(*bitmap).greenHeight = maxHeight;
 	}
 
+	int blueWidth, blueHeight;
 	// Decode blue channel
-	returnCode = decodeJpegChannel(jpegData, jpegSize, 2, &(*bitmap).blue, &(*bitmap).blueWidth, &(*bitmap).blueHeight);
+	returnCode = decodeJpegChannel(jpegData, jpegSize, 2, &(*bitmap).blue, &blueWidth, &blueHeight);
+	(*bitmap).blueWidth = (unsigned int) blueWidth;
+	(*bitmap).blueHeight = (unsigned int) blueHeight;
 	if (returnCode != MEMORY_OK) {
 		LOGE("Failed to decode blue channel");
 		njDone();
@@ -261,18 +271,18 @@ int resizeChannel(unsigned char** channelPixels, int srcWidth, int srcHeight, in
 }
 
 void getBitmapRowAsIntegers(Bitmap* bitmap, int y, int* pixels) {
-	unsigned int width = (*bitmap).width;
-	register unsigned int i = (width*y) + width - 1;
-	register unsigned int x;
+	int width = (*bitmap).width;
+	register int i = (width*y) + width - 1;
+	register int x;
 	for (x = width; x--; i--) {
 		pixels[x] = rgb((int)(*bitmap).red[i], (int)(*bitmap).green[i], (int)(*bitmap).blue[i]);
 	}
 }
 
 void setBitmapRowFromIntegers(Bitmap* bitmap, int y, int* pixels) {
-	unsigned int width = (*bitmap).width;
-	register unsigned int i = (width*y) + width - 1;
-	register unsigned int x;
+	int width = (*bitmap).width;
+	register int i = (width*y) + width - 1;
+	register int x;
 	for (x = width; x--; i--) {
 		(*bitmap).red[i] = red(pixels[x]);
 		(*bitmap).green[i] = green(pixels[x]);

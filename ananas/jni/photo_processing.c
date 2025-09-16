@@ -36,14 +36,14 @@ int Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nati
 
 void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeGetBitmapRow(JNIEnv* env, jclass thiz, jint y, jintArray pixels) {
 	int cpixels[bitmap.width];
-	getBitmapRowAsIntegers(&bitmap, (int)y, &cpixels);
+	getBitmapRowAsIntegers(&bitmap, (int)y, cpixels);
 	(*env)->SetIntArrayRegion(env, pixels, 0, bitmap.width, cpixels);
 }
 
 void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeSetBitmapRow(JNIEnv* env, jclass thiz, jint y, jintArray pixels) {
 	int cpixels[bitmap.width];
 	(*env)->GetIntArrayRegion(env, pixels, 0, bitmap.width, cpixels);
-	setBitmapRowFromIntegers(&bitmap, (int)y, &cpixels);
+	setBitmapRowFromIntegers(&bitmap, (int)y, cpixels);
 }
 
 int Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeGetBitmapWidth(JNIEnv* env, jclass thiz) {
@@ -71,6 +71,7 @@ int Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nati
 	//All the component dimensions should have changed, so copy the correct dimensions
 	bitmap.width = bitmap.redWidth;
 	bitmap.height = bitmap.redHeight;
+	return MEMORY_OK;
 }
 
 void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeRotate180(JNIEnv* env, jclass thiz) {
@@ -177,6 +178,7 @@ int Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nati
 
 	bitmap.width = newWidth;
 	bitmap.height = newHeight;
+	return MEMORY_OK;
 }
 
 

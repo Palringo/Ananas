@@ -20,8 +20,8 @@
 #include <math.h>
 #include <android/log.h>
 #include <stdlib.h>
-#include "blur.h"
 #include "matrix.h"
+#include "blur.h"
 
 #define  LOG_TAG    "filter.c"
 #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
@@ -315,7 +315,9 @@ int unsharpMask(Bitmap* bitmap, int radius, float amount, int threshold) {
 	}
 
 	float blurRadius = radius/3.0f;
-	resultCode = stackBlur(&blurRadius, (*bitmap).red, (*bitmap).green, (*bitmap).blue, &((*bitmap).width), &((*bitmap).height), blurRed, blurGreen, blurBlue);
+	int width = (*bitmap).width;
+	int height = (*bitmap).height;
+	resultCode = stackBlur(&blurRadius, (*bitmap).red, (*bitmap).green, (*bitmap).blue, &width, &height, blurRed, blurGreen, blurBlue);
 	if (resultCode != MEMORY_OK) {
 		freeUnsignedCharArray(&blurRed);
 		freeUnsignedCharArray(&blurGreen);
@@ -340,19 +342,19 @@ int unsharpMask(Bitmap* bitmap, int radius, float amount, int threshold) {
 		int g2 = blurGreen[i];
 		int b2 = blurBlue[i];
 
-		if (fabs(r1 - r2) >= threshold) {
+		if (abs(r1 - r2) >= threshold) {
 			if (lut[r1][r2] == -1) {
 				lut[r1][r2] = clampComponent((int) ((a + 1) * (r1 - r2) + r2));
 			}
 			r1 = lut[r1][r2]; //clampComponent((int) ((a + 1) * (r1 - r2) + r2));
 		}
-		if (fabs(g1 - g2) >= threshold) {
+		if (abs(g1 - g2) >= threshold) {
 			if (lut[g1][g2] == -1) {
 				lut[g1][g2] = clampComponent((int) ((a + 1) * (g1 - g2) + g2));
 			}
 			g1 = lut[g1][g2]; //clampComponent((int) ((a + 1) * (g1 - g2) + g2));
 		}
-		if (fabs(b1 - b2) >= threshold) {
+		if (abs(b1 - b2) >= threshold) {
 			if (lut[b1][b2] == -1) {
 				lut[b1][b2] = clampComponent((int) ((a + 1) * (b1 - b2) + b2));
 			}
@@ -367,6 +369,7 @@ int unsharpMask(Bitmap* bitmap, int radius, float amount, int threshold) {
 	freeUnsignedCharArray(&blurRed);
 	freeUnsignedCharArray(&blurGreen);
 	freeUnsignedCharArray(&blurBlue);
+	return MEMORY_OK;
 }
 
 // Normalise the colours
@@ -410,7 +413,7 @@ void normaliseColours(Bitmap* bitmap) {
 		for (i = 0; i <= 255; i++) {
 			percentage = nextPercentage;
 			nextPercentage += (float) histogram[channel][i + 1] / count;
-			if (fabs(percentage - 0.006) < fabs(nextPercentage - 0.006)) {
+			if (abs(percentage - 0.006) < abs(nextPercentage - 0.006)) {
 				low = i;
 				break;
 			}
@@ -420,7 +423,7 @@ void normaliseColours(Bitmap* bitmap) {
 		for (i = 255; i >= 0; i--) {
 			percentage = nextPercentage;
 			nextPercentage += histogram[channel][i - 1] / count;
-			if (fabs(percentage - 0.006) < fabs(nextPercentage - 0.006)) {
+			if (abs(percentage - 0.006) < abs(nextPercentage - 0.006)) {
 				high = i;
 				break;
 			}
@@ -495,10 +498,10 @@ int applySahara(Bitmap* bitmap) {
 	}
 
 	float matrix[4][4];
-	identMatrix(matrix);
+	identMatrix((float*)matrix);
 	float saturation = 0.65f;
-	saturateMatrix(matrix, &saturation);
-	applyMatrix(bitmap, matrix);
+	saturateMatrix((float*)matrix, &saturation);
+	applyMatrix(bitmap, (float*)matrix);
 
 	unsigned char* blurRed;
 	unsigned char* blurGreen;
@@ -520,7 +523,9 @@ int applySahara(Bitmap* bitmap) {
 	}
 
 	float blurRadius = 1.0f;
-	resultCode = stackBlur(&blurRadius, (*bitmap).red, (*bitmap).green, (*bitmap).blue, &((*bitmap).width), &((*bitmap).height), blurRed, blurGreen, blurBlue);
+	int width = (*bitmap).width;
+	int height = (*bitmap).height;
+	resultCode = stackBlur(&blurRadius, (*bitmap).red, (*bitmap).green, (*bitmap).blue, &width, &height, blurRed, blurGreen, blurBlue);
 	if (resultCode != MEMORY_OK) {
 		freeUnsignedCharArray(&blurRed);
 		freeUnsignedCharArray(&blurGreen);
@@ -597,7 +602,9 @@ int applyHDR(Bitmap* bitmap) {
 		return resultCode;
 	}
 	float blurRadius = 9.0f;
-	resultCode = stackBlur(&blurRadius, red, green, blue, &((*bitmap).width), &((*bitmap).height), blurRed, blurGreen, blurBlue);
+	int width = (*bitmap).width;
+	int height = (*bitmap).height;
+	resultCode = stackBlur(&blurRadius, red, green, blue, &width, &height, blurRed, blurGreen, blurBlue);
 	if (resultCode != MEMORY_OK) {
 		freeUnsignedCharArray(&blurRed);
 		freeUnsignedCharArray(&blurGreen);
@@ -608,9 +615,9 @@ int applyHDR(Bitmap* bitmap) {
 	unsigned int i, j;
 	unsigned char r1, g1, b1, r2, g2, b2;
 	float matrix[4][4];
-	identMatrix(matrix);
+	identMatrix((float*)matrix);
 	float saturation = 1.3f;
-	saturateMatrix(matrix, &saturation);
+	saturateMatrix((float*)matrix, &saturation);
 	for (i = length; i--;) {
 		// invert the blurred pixel
 		r1 = 255 - blurRed[i];
@@ -629,7 +636,7 @@ int applyHDR(Bitmap* bitmap) {
 		r2 = red[i];
 		g2 = green[i];
 		b2 = blue[i];
-		applyMatrixToPixel(&r2, &g2, &b2, matrix);
+		applyMatrixToPixel(&r2, &g2, &b2, (float*)matrix);
 		//hsbToRgb(&hsb, &r2, &g2, &b2);
 
 		// grain merge the saturated pixel with the inverted grain merged pixel
@@ -638,7 +645,7 @@ int applyHDR(Bitmap* bitmap) {
 		blue[i] = grainMergePixelsComponent(b2, g1);
 	}
 
-	applyMatrix(bitmap, matrix);
+	applyMatrix(bitmap, (float*)matrix);
 
 	freeUnsignedCharArray(&blurRed);
 	freeUnsignedCharArray(&blurGreen);
@@ -669,10 +676,10 @@ void applyTestino(Bitmap* bitmap) {
 	}
 
 	float matrix[4][4];
-	identMatrix(matrix);
+	identMatrix((float*)matrix);
 	float saturation = 1.5f;
-	saturateMatrix(matrix, &saturation);
-	applyMatrix(bitmap, matrix);
+	saturateMatrix((float*)matrix, &saturation);
+	applyMatrix(bitmap, (float*)matrix);
 
 	for (i = length; i--;) {
 		//rgbToHsb(red[i], green[i], blue[i], &hsb);
@@ -886,4 +893,3 @@ void applyRetro(Bitmap* bitmap) {
 		blue[i] = screen233Lut[b]; //screenPixelComponent(233, 0.168627f, b);
 	}
 }
-

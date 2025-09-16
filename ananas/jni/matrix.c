@@ -60,7 +60,7 @@ void applyMatrixToPixel(unsigned char* red, unsigned char* green, unsigned char*
 	(*blue) = b2;
 }
 
-int identMatrix(float *matrix) {
+void identMatrix(float *matrix) {
     *matrix++ = 1.0f;    /* row 1        */
     *matrix++ = 0.0f;
     *matrix++ = 0.0f;
@@ -121,7 +121,7 @@ void saturateMatrix(float matrix[4][4], float* saturation)
     multiplyMatricies(mmatrix, matrix, matrix);
 }
 
-int multiplyMatricies(float a[4][4], float b[4][4], float c[4][4]) {
+void multiplyMatricies(float a[4][4], float b[4][4], float c[4][4]) {
     int x, y;
     float temp[4][4];
 
