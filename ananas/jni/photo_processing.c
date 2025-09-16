@@ -28,41 +28,41 @@
 
 static Bitmap bitmap;
 //Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing
-int Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeInitBitmap(JNIEnv* env, jobject thiz, jint width, jint height) {
+int Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeInitBitmap(JNIEnv* env, jclass thiz, jint width, jint height) {
 	return initBitmapMemory(&bitmap, width, height);
 }
 
 //
 
-void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeGetBitmapRow(JNIEnv* env, jobject thiz, jint y, jintArray pixels) {
+void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeGetBitmapRow(JNIEnv* env, jclass thiz, jint y, jintArray pixels) {
 	int cpixels[bitmap.width];
 	getBitmapRowAsIntegers(&bitmap, (int)y, &cpixels);
 	(*env)->SetIntArrayRegion(env, pixels, 0, bitmap.width, cpixels);
 }
 
-void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeSetBitmapRow(JNIEnv* env, jobject thiz, jint y, jintArray pixels) {
+void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeSetBitmapRow(JNIEnv* env, jclass thiz, jint y, jintArray pixels) {
 	int cpixels[bitmap.width];
 	(*env)->GetIntArrayRegion(env, pixels, 0, bitmap.width, cpixels);
 	setBitmapRowFromIntegers(&bitmap, (int)y, &cpixels);
 }
 
-int Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeGetBitmapWidth(JNIEnv* env, jobject thiz) {
+int Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeGetBitmapWidth(JNIEnv* env, jclass thiz) {
 	return bitmap.width;
 }
 
-int Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeGetBitmapHeight(JNIEnv* env, jobject thiz) {
+int Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeGetBitmapHeight(JNIEnv* env, jclass thiz) {
 	return bitmap.height;
 }
 
-void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeDeleteBitmap(JNIEnv* env, jobject thiz) {
+void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeDeleteBitmap(JNIEnv* env, jclass thiz) {
 	deleteBitmap(&bitmap);
 }
 
-void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeFlipHorizontally(JNIEnv* env, jobject thiz) {
+void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeFlipHorizontally(JNIEnv* env, jclass thiz) {
 	flipHorizontally(&bitmap, 1, 1, 1);
 }
 
-int Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeRotate90(JNIEnv* env, jobject thiz) {
+int Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeRotate90(JNIEnv* env, jclass thiz) {
 	int resultCode = rotate90(&bitmap, 1, 1, 1);
 	if (resultCode != MEMORY_OK) {
 		return resultCode;
@@ -73,55 +73,55 @@ int Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nati
 	bitmap.height = bitmap.redHeight;
 }
 
-void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeRotate180(JNIEnv* env, jobject thiz) {
+void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeRotate180(JNIEnv* env, jclass thiz) {
 	rotate180(&bitmap, 1, 1, 1);
 }
 
-void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeApplyInstafix(JNIEnv* env, jobject thiz) {
+void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeApplyInstafix(JNIEnv* env, jclass thiz) {
 	applyInstafix(&bitmap);
 }
 
-void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeApplyAnsel(JNIEnv* env, jobject thiz) {
+void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeApplyAnsel(JNIEnv* env, jclass thiz) {
 	applyAnselFilter(&bitmap);
 }
 
-void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeApplyTestino(JNIEnv* env, jobject thiz) {
+void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeApplyTestino(JNIEnv* env, jclass thiz) {
 	applyTestino(&bitmap);
 }
 
-void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeApplyXPro(JNIEnv* env, jobject thiz) {
+void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeApplyXPro(JNIEnv* env, jclass thiz) {
 	applyXPro(&bitmap);
 }
 
-void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeApplyRetro(JNIEnv* env, jobject thiz) {
+void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeApplyRetro(JNIEnv* env, jclass thiz) {
 	applyRetro(&bitmap);
 }
 
-void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeApplyBW(JNIEnv* env, jobject thiz) {
+void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeApplyBW(JNIEnv* env, jclass thiz) {
 	applyBlackAndWhiteFilter(&bitmap);
 }
 
-void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeApplySepia(JNIEnv* env, jobject thiz) {
+void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeApplySepia(JNIEnv* env, jclass thiz) {
 	applySepia(&bitmap);
 }
 
-void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeApplyCyano(JNIEnv* env, jobject thiz) {
+void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeApplyCyano(JNIEnv* env, jclass thiz) {
 	applyCyano(&bitmap);
 }
 
-void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeApplyGeorgia(JNIEnv* env, jobject thiz) {
+void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeApplyGeorgia(JNIEnv* env, jclass thiz) {
 	applyGeorgia(&bitmap);
 }
 
-void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeApplySahara(JNIEnv* env, jobject thiz) {
+void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeApplySahara(JNIEnv* env, jclass thiz) {
 	applySahara(&bitmap);
 }
 
-void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeApplyHDR(JNIEnv* env, jobject thiz) {
+void Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeApplyHDR(JNIEnv* env, jclass thiz) {
 	applyHDR(&bitmap);
 }
 
-int Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeLoadResizedJpegBitmap(JNIEnv* env, jobject thiz, jbyteArray bytes, jint jpegSize, jint maxPixels) {
+int Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeLoadResizedJpegBitmap(JNIEnv* env, jclass thiz, jbyteArray bytes, jint jpegSize, jint maxPixels) {
 	char* jpegData = (char*) (*env)->GetPrimitiveArrayCritical(env, bytes, NULL);
 
 	if (jpegData == NULL) {
@@ -141,7 +141,7 @@ int Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nati
 	return MEMORY_OK;
 }
 
-int Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeResizeBitmap(JNIEnv* env, jobject thiz, jint newWidth, jint newHeight) {
+int Java_iamutkarshtiwari_github_io_ananas_editimage_fliter_PhotoProcessing_nativeResizeBitmap(JNIEnv* env, jclass thiz, jint newWidth, jint newHeight) {
 	unsigned char* newRed;
 	int resultCode = newUnsignedCharArray(newWidth*newHeight, &newRed);
 	if (resultCode != MEMORY_OK) {
