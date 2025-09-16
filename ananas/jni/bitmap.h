@@ -16,11 +16,15 @@
 
 #ifndef BITMAP
 #define BITMAP
-#endif
-
-#include <transform.h>
 
 static const int INCONSISTENT_BITMAP_ERROR = 5;
+
+//move here from transform.h to resolve cyclic dependency
+typedef struct {
+    float cropBounds[4]; //left, top, right, bottom
+    unsigned char* transforms;
+    int size;
+} TransformList;
 
 typedef struct {
 	unsigned int width;
@@ -39,6 +43,53 @@ typedef struct {
 
 	TransformList transformList;
 } Bitmap;
+
+#endif
+
+
+//defining Transform.h embedded in here because of cyclic dependency between bitmap.c and transform.c
+#ifndef TRANSFORM
+#define TRANSFORM
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+static const char FLIP_HORIZONTALLY = 'h';
+static const char FLIP_VERTICALLY = 'v';
+static const char ROTATE_90 = 'r';
+static const char ROTATE_180 = 'u';
+static const char CROP = 'c';
+
+void flipHorizontally(Bitmap* bitmap, int doRed, int doGreen, int doBlue);
+int rotate90(Bitmap* bitmap, int doRed, int doGreen, int doBlue);
+void rotate180(Bitmap* bitmap, int doRed, int doGreen, int doBlue);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* TRANSFORM */
+
+
+//defining filter.h embedded in here because of cyclic dependency between bitmap.c and filter.c
+#ifndef FILTER_H
+#define FILTER_H
+
+void applyBlackAndWhiteFilter(Bitmap* bitmap);
+void applyAnselFilter(Bitmap* bitmap);
+void applySepia(Bitmap* bitmap);
+void applyGeorgia(Bitmap* bitmap);
+void applyInstafix(Bitmap* bitmap);
+int applySahara(Bitmap* bitmap);
+int applyHDR(Bitmap* bitmap);
+void applyTestino(Bitmap* bitmap);
+void applyXPro(Bitmap* bitmap);
+void applyCyano(Bitmap* bitmap);
+void applyRetro(Bitmap* bitmap);
+
+#endif //FILTER_H
+
 
 /**
  * @file bitmap.h
@@ -123,6 +174,20 @@ int AndroidBitmap_lockPixels(JNIEnv* env, jobject jbitmap, void** addrPtr);
  * Call this to balance a successful call to AndroidBitmap_lockPixels.
  */
 int AndroidBitmap_unlockPixels(JNIEnv* env, jobject jbitmap);
+
+int decodeJpegChannel(char* jpegData, int jpegSize, int channel,
+                             unsigned char** channelPixels,
+                             int* srcWidth, int* srcHeight);
+int resizeChannel(unsigned char** channelPixels, int srcWidth, int srcHeight,
+                         int maxWidth, int maxHeight);
+
+int doTransforms(Bitmap* bitmap, int doRed, int doGreen, int doBlue);
+
+void getBitmapRowAsIntegers(Bitmap* bitmap, int y, int* pixels);
+void setBitmapRowFromIntegers(Bitmap* bitmap, int y, int* pixels);
+void deleteBitmap(Bitmap* bitmap);
+int decodeJpegData(char* jpegData, int jpegSize, int maxPixels, Bitmap* bitmap);
+int initBitmapMemory(Bitmap* bitmap, int width, int height);
 
 #ifdef __cplusplus
 }

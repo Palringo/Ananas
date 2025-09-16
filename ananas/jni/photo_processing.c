@@ -20,6 +20,7 @@
 #include <mem_utils.h>
 #include <android/log.h>
 #include "beauty.h"
+#include "bicubic_resize.h"
 
 #define  LOG_TAG    "IMAGE_EDIT_PROCESSING"
 #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
